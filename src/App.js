@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import styled from 'styled-components';
-import logo from './logo.svg';
 import { URL } from './constants/URL';
 import './App.css';
+import StockList from './components/StockList';
+import DetailsDisplay from './components/DetailsDisplay';
 
-const Header = styled.section`
-  background-color: blue;
-  margin: 20px auto;
-  width: 100px;
-  height: 200px;
-`;
+const Aside = styled.aside`
+  height: 100vh;
+  width: 300px;
+  background-color: #F3F7FA
+`
+
+const Main = styled.main`
+  display: flex;
+`
 
 class App extends Component {
   constructor() {
@@ -35,19 +40,22 @@ class App extends Component {
   }
 
   render() {
+    const { firms, data } = this.state;
+
     return (
-      <div className="App">
-        <Header>
-          trolololo
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </Header>
-      </div>
+      <Router>
+        <Main>
+          <Aside>
+            <StockList markets={{ firms, data }} />
+          </Aside>
+          <Route exact={true} path="/" render={() => (
+              <h1></h1>
+          )} />
+        <Route path="/t/:ticker" render={history => (
+            <DetailsDisplay markets={{ firms, data }} match={history.match} />
+          )} />
+        </Main>
+      </Router>
     );
   }
 }
